@@ -1,0 +1,65 @@
+# k8s/overlays/development/kustomization.yaml
+# Development overlay for self-hosted kubeadm cluster.
+#
+# Differences from base:
+#   - 1 replica (save resources on dev cluster)
+#   - Smaller CPU/memory limits
+#   - Image tag: dev (or a short git SHA)
+#   - NODE_ENV: development (more verbose logs)
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: auth-service
+
+resources:
+  - ../../base
+
+# ── Image: point to your private registry with a dev tag ─────────────────────
+# Change registry.yourdomain.com to your actual private registry hostname
+images:
+  - name:    registry.yourdomain.com/auth-microservice
+    newTag:  dev
+
+# ── Patches ───────────────────────────────────────────────────────────────────
+patches:
+  # Reduce replicas and resources for development
+  - patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: auth-service
+        namespace: auth-service
+      spec:
+        replicas: 1
+        template:
+          spec:
+            containers:
+              - name: auth-service
+                resources:
+                  requests:
+                    cpu:    "50m"
+                    memory: "64Mi"
+                  limits:
+                    cpu:    "200m"
+                    memory: "256Mi"
+
+  # Relax HPA to allow scaling down to 1 in dev
+  - patch: |-
+      apiVersion: autoscaling/v2
+      kind: HorizontalPodAutoscaler
+      metadata:
+        name: auth-service-hpa
+        namespace: auth-service
+      spec:
+        minReplicas: 1
+        maxReplicas: 3
+
+# ── Dev-specific config overrides ─────────────────────────────────────────────
+configMapGenerator:
+  - name: auth-service-config
+    namespace: auth-service
+    behavior: merge
+    literals:
+      - NODE_ENV=development
+      - SERVICE_VERSION=dev

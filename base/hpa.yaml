@@ -1,0 +1,41 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: auth-service-hpa
+  namespace: auth-service
+  labels:
+    app.kubernetes.io/name: auth-microservice
+    app.kubernetes.io/component: autoscaler
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: auth-service
+  minReplicas: 2    # Always keep at least 2 for high availability
+  maxReplicas: 10
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70   # Scale up when CPU > 70% average across pods
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80   # Scale up when memory > 80% average across pods
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 30     # React to load spikes within 30s
+      policies:
+        - type: Pods
+          value: 2               # Add max 2 pods per scale-up event
+          periodSeconds: 30
+    scaleDown:
+      stabilizationWindowSeconds: 300    # Wait 5 min before scaling down (prevent flapping)
+      policies:
+        - type: Pods
+          value: 1               # Remove max 1 pod per scale-down event
+          periodSeconds: 60

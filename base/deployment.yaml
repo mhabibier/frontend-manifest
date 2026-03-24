@@ -1,0 +1,132 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-service
+  namespace: auth-service
+  labels:
+    app.kubernetes.io/name: auth-microservice
+    app.kubernetes.io/component: server
+    app.kubernetes.io/version: "1.0.0"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: auth-service
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge:       1   # Spin up 1 extra pod before terminating old ones
+      maxUnavailable: 0   # Zero downtime — never kill a pod before its replacement is ready
+  template:
+    metadata:
+      labels:
+        app: auth-service
+        app.kubernetes.io/name: auth-microservice
+        app.kubernetes.io/component: server
+      annotations:
+        # Prometheus pod scrape annotations — used by kube-prometheus-stack or
+        # any Prometheus with pod auto-discovery enabled
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "3000"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: auth-service-sa
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001   # must match appuser UID in Dockerfile
+        runAsGroup: 1001
+        fsGroup: 1001
+        seccompProfile:
+          type: RuntimeDefault
+      terminationGracePeriodSeconds: 30
+      imagePullSecrets:
+        - name: registry-credentials
+      affinity:
+        podAntiAffinity:
+          # Prefer spreading pods across different nodes
+          # Using "preferred" so scheduling still works on single-node dev clusters
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app: auth-service
+                topologyKey: kubernetes.io/hostname
+      containers:
+        - name: auth-service
+          image: registry.yourdomain.com/auth-microservice:1.0.0
+          imagePullPolicy: Always   # Always pull to pick up tag updates on re-deploy
+          ports:
+            - name:          http
+              containerPort: 3000
+              protocol:      TCP
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem:   true
+            runAsNonRoot:             true
+            runAsUser:                1001
+            capabilities:
+              drop: ["ALL"]   # Drop all Linux capabilities
+          envFrom:
+            - configMapRef:
+                name: auth-service-config
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: auth-service-secret
+                  key:  DATABASE_URL
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: auth-service-secret
+                  key:  JWT_SECRET
+            - name: ADMIN_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: auth-service-secret
+                  key:  ADMIN_USERNAME
+            - name: ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: auth-service-secret
+                  key:  ADMIN_PASSWORD
+          startupProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds:       10
+            failureThreshold:    6    # 6 × 10s = 60s max startup time
+            timeoutSeconds:      3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 0    # startupProbe handles the initial wait
+            periodSeconds:       20
+            timeoutSeconds:      5
+            failureThreshold:    3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 0
+            periodSeconds:       10
+            timeoutSeconds:      3
+            failureThreshold:    3
+            successThreshold:    1
+          resources:
+            requests:
+              cpu:    "100m"
+              memory: "128Mi"
+            limits:
+              cpu:    "500m"
+              memory: "512Mi"
+          volumeMounts:
+            - name:      tmp
+              mountPath: /tmp   # Writable scratch space (readOnlyRootFilesystem = true)
+      volumes:
+        - name: tmp
+          emptyDir: {}   # Ephemeral, cleared on pod restart

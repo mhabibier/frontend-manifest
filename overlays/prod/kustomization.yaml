@@ -1,0 +1,65 @@
+# k8s/overlays/production/kustomization.yaml
+# Production overlay for self-hosted kubeadm cluster.
+#
+# Differences from base:
+#   - 3 replicas minimum
+#   - Higher CPU/memory limits
+#   - HPA max scaled to 20
+#   - Pinned to exact semver image tag (never use :latest in production)
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: auth-service
+
+resources:
+  - ../../base
+
+# ── Image: pin to an exact semver tag in production ──────────────────────────
+# NEVER use :latest — always use a specific immutable tag
+# Change registry.yourdomain.com to your actual private registry hostname
+images:
+  - name:    registry.yourdomain.com/auth-microservice
+    newTag:  "1.0.0"
+
+# ── Patches ───────────────────────────────────────────────────────────────────
+patches:
+  # Scale up replicas and tighten resource limits for production
+  - patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: auth-service
+        namespace: auth-service
+      spec:
+        replicas: 3
+        template:
+          spec:
+            containers:
+              - name: auth-service
+                resources:
+                  requests:
+                    cpu:    "200m"
+                    memory: "256Mi"
+                  limits:
+                    cpu:    "1000m"
+                    memory: "512Mi"
+
+  # Wider HPA range for production traffic
+  - patch: |-
+      apiVersion: autoscaling/v2
+      kind: HorizontalPodAutoscaler
+      metadata:
+        name: auth-service-hpa
+        namespace: auth-service
+      spec:
+        minReplicas: 3
+        maxReplicas: 20
+
+configMapGenerator:
+  - name: auth-service-config
+    namespace: auth-service
+    behavior: merge
+    literals:
+      - NODE_ENV=production
+      - JWT_EXPIRES_IN=1h

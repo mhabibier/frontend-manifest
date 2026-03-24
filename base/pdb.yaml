@@ -1,0 +1,13 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: auth-service-pdb
+  namespace: auth-service
+  labels:
+    app.kubernetes.io/name:      auth-microservice
+    app.kubernetes.io/component: pdb
+spec:
+  minAvailable: 1   # At least 1 pod must stay up during disruptions
+  selector:
+    matchLabels:
+      app: auth-service
