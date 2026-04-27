@@ -24,35 +24,22 @@ spec:
         app.kubernetes.io/name: auth-microservice
         app.kubernetes.io/component: server
       annotations:
-        # Prometheus pod scrape annotations — used by kube-prometheus-stack or
-        # any Prometheus with pod auto-discovery enabled
         prometheus.io/scrape: "true"
         prometheus.io/port: "3000"
         prometheus.io/path: "/metrics"
     spec:
-      # serviceAccountName: auth-service-sa
-      # automountServiceAccountToken: false
-      # securityContext:
-      #   runAsNonRoot: true
-      #   runAsUser: 1001   # must match appuser UID in Dockerfile
-      #   runAsGroup: 1001
-      #   fsGroup: 1001
-      #   seccompProfile:
-      #     type: RuntimeDefault
-      # terminationGracePeriodSeconds: 30
+      serviceAccountName: auth-service-sa
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001   # must match appuser UID in Dockerfile
+        runAsGroup: 1001
+        fsGroup: 1001
+        seccompProfile:
+          type: RuntimeDefault
+      terminationGracePeriodSeconds: 30
       imagePullSecrets:
         - name: harbor-secret
-      # affinity:
-      #   podAntiAffinity:
-      #     # Prefer spreading pods across different nodes
-      #     # Using "preferred" so scheduling still works on single-node dev clusters
-      #     preferredDuringSchedulingIgnoredDuringExecution:
-      #       - weight: 100
-      #         podAffinityTerm:
-      #           labelSelector:
-      #             matchLabels:
-      #               app: auth-service
-      #           topologyKey: kubernetes.io/hostname
       containers:
         - name: auth-service
           image: harbor.sxdentrypoint.my.id/test/auth-svc:v1
