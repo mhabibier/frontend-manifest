@@ -1,0 +1,59 @@
+# k8s/overlays/development/kustomization.yaml
+# Development overlay for frontend-service.
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# Namespace harus sinkron dengan folder base frontend
+namespace: frontend-service
+
+resources:
+  - ../../base
+
+# ── Image: Mengarahkan ke registry dengan tag dev ────────────────────────────
+images:
+  - name: registry.yourdomain.com/frontend-microservice
+    newTag: dev
+
+# ── Patches ───────────────────────────────────────────────────────────────────
+patches:
+  # Mengurangi replika dan resource agar hemat RAM di laptop/dev cluster
+  - patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: frontend-service
+        namespace: frontend-service
+      spec:
+        replicas: 1
+        template:
+          spec:
+            containers:
+              - name: frontend-service
+                resources:
+                  requests:
+                    cpu:    "50m"
+                    memory: "64Mi"
+                  limits:
+                    cpu:    "200m"
+                    memory: "256Mi"
+
+  # Menyesuaikan HPA agar bisa turun sampai 1 pod di lingkungan dev
+  - patch: |-
+      apiVersion: autoscaling/v2
+      kind: HorizontalPodAutoscaler
+      metadata:
+        name: frontend-service-hpa
+        namespace: frontend-service
+      spec:
+        minReplicas: 1
+        maxReplicas: 3
+
+# ── Dev-specific config overrides ─────────────────────────────────────────────
+configMapGenerator:
+  - name: frontend-service-config
+    namespace: frontend-service
+    behavior: merge
+    literals:
+      - NODE_ENV=development
+      - SERVICE_VERSION=dev

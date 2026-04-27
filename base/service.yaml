@@ -1,17 +1,21 @@
+# k8s/base/frontend-service/service.yaml
+# Internal load balancer for frontend-microservice.
+
 apiVersion: v1
 kind: Service
 metadata:
-  name: auth-service
-  namespace: auth-service
+  name: frontend-service
+  namespace: frontend-service
   labels:
-    app.kubernetes.io/name:      auth-microservice
+    app.kubernetes.io/name: frontend-microservice
     app.kubernetes.io/component: server
 spec:
   type: ClusterIP
   selector:
-    app: auth-service   # Must match pod template labels in Deployment
+    app: frontend-service # Harus cocok dengan label pada Deployment frontend
   ports:
     - name: http
+<<<<<<< HEAD
       port: 80          # Cluster-internal port clients connect to
       targetPort: http        # Named port on the pod (containerPort: 3000)
       protocol: TCP
@@ -36,3 +40,8 @@ spec:
 #       targetPort: http        # Named port on the pod (containerPort: 3000)
 #       protocol: TCP
 #       nodePort: 30080    # Optional fixed node port (30000-32767)
+=======
+      port: 80 # Port internal di dalam cluster
+      targetPort: http # Merujuk ke containerPort: 3000 di Deployment
+      protocol: TCP
+>>>>>>> acd3927 (first commit)

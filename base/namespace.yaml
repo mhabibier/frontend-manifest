@@ -1,0 +1,10 @@
+# k8s/base/frontend-service/namespace.yaml
+# Dedicated namespace for frontend-service components.
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: frontend-service
+  labels:
+    app.kubernetes.io/name: frontend-microservice
+    app.kubernetes.io/managed-by: kubectl

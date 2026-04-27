@@ -1,9 +1,13 @@
+# k8s/base/frontend-service/sa.yaml
+# Dedicated ServiceAccount for frontend-microservice.
+
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: auth-service-sa
-  namespace: auth-service
+  name: frontend-service-sa
+  namespace: frontend-service
   labels:
-    app.kubernetes.io/name:      auth-microservice
+    app.kubernetes.io/name: frontend-microservice
     app.kubernetes.io/component: serviceaccount
+# Mengamankan pod dengan tidak memasang token API secara otomatis
 automountServiceAccountToken: false
