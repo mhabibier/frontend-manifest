@@ -1,35 +1,35 @@
-# k8s/overlays/development/kustomization.yaml
-# Development overlay for frontend-service.
+# k8s/overlays/development/dashboard-service/kustomization.yaml
+# Development overlay for dashboard-microservice.
 
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-# Namespace harus sinkron dengan folder base frontend
-namespace: frontend-service
+# Namespace harus sinkron dengan folder base dashboard
+namespace: dashboard-service
 
 resources:
-  - ../../base
+  - ../../../base/dashboard-service
 
 # ── Image: Mengarahkan ke registry dengan tag dev ────────────────────────────
 images:
-  - name: registry.yourdomain.com/frontend-microservice
+  - name: registry.yourdomain.com/dashboard-microservice
     newTag: dev
 
 # ── Patches ───────────────────────────────────────────────────────────────────
 patches:
-  # Mengurangi replika dan resource agar hemat RAM di laptop/dev cluster
+  # Mengurangi replika dan resource agar hemat RAM di cluster pengembangan
   - patch: |-
       apiVersion: apps/v1
       kind: Deployment
       metadata:
-        name: frontend-service
-        namespace: frontend-service
+        name: dashboard-service
+        namespace: dashboard-service
       spec:
         replicas: 1
         template:
           spec:
             containers:
-              - name: frontend-service
+              - name: dashboard-service
                 resources:
                   requests:
                     cpu:    "50m"
@@ -38,22 +38,23 @@ patches:
                     cpu:    "200m"
                     memory: "256Mi"
 
-  # Menyesuaikan HPA agar bisa turun sampai 1 pod di lingkungan dev
+  # Menyesuaikan HPA agar bisa turun sampai 1 pod (tidak perlu HA di dev)
   - patch: |-
       apiVersion: autoscaling/v2
       kind: HorizontalPodAutoscaler
       metadata:
-        name: frontend-service-hpa
-        namespace: frontend-service
+        name: dashboard-service-hpa
+        namespace: dashboard-service
       spec:
         minReplicas: 1
         maxReplicas: 3
 
 # ── Dev-specific config overrides ─────────────────────────────────────────────
 configMapGenerator:
-  - name: frontend-service-config
-    namespace: frontend-service
+  - name: dashboard-service-config
+    namespace: dashboard-service
     behavior: merge
     literals:
       - NODE_ENV=development
       - SERVICE_VERSION=dev
+      - DEBUG=dashboard:*

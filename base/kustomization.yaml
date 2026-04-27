@@ -1,11 +1,11 @@
-# k8s/base/frontend-service/kustomization.yaml
-# Base kustomization for frontend-microservice.
+# k8s/base/dashboard-service/kustomization.yaml
+# Base kustomization for dashboard-microservice.
 
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-# Namespace harus sinkron dengan semua file di dalam resources
-namespace: frontend-service
+# Namespace untuk isolasi seluruh komponen dashboard
+namespace: dashboard-service
 
 resources:
   - namespace.yaml
@@ -18,7 +18,7 @@ resources:
   - hpa.yaml
   - pdb.yaml
 
-# Menambahkan label ke SEMUA resource secara otomatis
+# Menyuntikkan label standar ke semua resource secara otomatis
 commonLabels:
-  app.kubernetes.io/name: frontend-microservice
+  app.kubernetes.io/name: dashboard-microservice
   app.kubernetes.io/managed-by: kustomize

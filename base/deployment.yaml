@@ -1,17 +1,18 @@
+# k8s/base/dashboard-service/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: frontend-service
-  namespace: frontend-service
+  name: dashboard-service
+  namespace: dashboard-service
   labels:
-    app.kubernetes.io/name: frontend-microservice
+    app.kubernetes.io/name: dashboard-microservice
     app.kubernetes.io/component: server
     app.kubernetes.io/version: "1.0.0"
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: frontend-service
+      app: dashboard-service
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -20,15 +21,15 @@ spec:
   template:
     metadata:
       labels:
-        app: frontend-service
-        app.kubernetes.io/name: frontend-microservice
+        app: dashboard-service
+        app.kubernetes.io/name: dashboard-microservice
         app.kubernetes.io/component: server
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "3000"
         prometheus.io/path: "/metrics"
     spec:
-      serviceAccountName: frontend-service-sa
+      serviceAccountName: dashboard-service-sa
       automountServiceAccountToken: false
       securityContext:
         runAsNonRoot: true
@@ -39,13 +40,6 @@ spec:
           type: RuntimeDefault
       terminationGracePeriodSeconds: 30
       imagePullSecrets:
-<<<<<<< HEAD
-        - name: harbor-secret
-      containers:
-        - name: auth-service
-          image: harbor.sxdentrypoint.my.id/test/auth-svc:v1
-          imagePullPolicy: Always   # Always pull to pick up tag updates on re-deploy
-=======
         - name: registry-credentials
       affinity:
         podAntiAffinity:
@@ -54,34 +48,31 @@ spec:
               podAffinityTerm:
                 labelSelector:
                   matchLabels:
-                    app: frontend-service
+                    app: dashboard-service
                 topologyKey: kubernetes.io/hostname
       containers:
-        - name: frontend-service
-          image: registry.yourdomain.com/frontend-microservice:1.0.0
+        - name: dashboard-service
+          image: registry.yourdomain.com/dashboard-microservice:1.0.0
           imagePullPolicy: Always
->>>>>>> acd3927 (first commit)
           ports:
             - name: http
               containerPort: 3000
               protocol: TCP
           securityContext:
             allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true # Root FS hanya baca untuk keamanan
+            readOnlyRootFilesystem: true
             runAsNonRoot: true
             runAsUser: 1001
             capabilities:
               drop: ["ALL"]
           envFrom:
             - configMapRef:
-                name: frontend-service-config
-          # Frontend biasanya tidak butuh akses database langsung,
-          # tapi mungkin butuh API Keys atau Secret lainnya.
+                name: dashboard-service-config
           env:
             - name: API_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: frontend-service-secret
+                  name: dashboard-service-secret
                   key: API_CLIENT_SECRET
           startupProbe:
             httpGet:

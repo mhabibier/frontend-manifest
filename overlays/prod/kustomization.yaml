@@ -1,36 +1,36 @@
-# k8s/overlays/production/kustomization.yaml
-# Production overlay for frontend-service.
+# k8s/overlays/production/dashboard-service/kustomization.yaml
+# Production overlay for dashboard-microservice.
 
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-# Namespace harus sinkron dengan base frontend
-namespace: frontend-service
+# Namespace harus sesuai dengan base dashboard
+namespace: dashboard-service
 
 resources:
-  - ../../base
+  - ../../../base/dashboard-service
 
 # ── Image: Gunakan tag semver yang spesifik di production ───────────────────
-# JANGAN gunakan :latest — selalu gunakan tag immutable agar deployment terprediksi
+# Selalu gunakan tag immutable (bukan :latest) untuk konsistensi deployment
 images:
-  - name: registry.yourdomain.com/frontend-microservice
+  - name: registry.yourdomain.com/dashboard-microservice
     newTag: "1.0.0"
 
 # ── Patches ───────────────────────────────────────────────────────────────────
 patches:
-  # Tingkatkan replika dan perketat limit resource untuk produksi
+  # Meningkatkan replika dan alokasi resource untuk performa stabil
   - patch: |-
       apiVersion: apps/v1
       kind: Deployment
       metadata:
-        name: frontend-service
-        namespace: frontend-service
+        name: dashboard-service
+        namespace: dashboard-service
       spec:
         replicas: 3
         template:
           spec:
             containers:
-              - name: frontend-service
+              - name: dashboard-service
                 resources:
                   requests:
                     cpu:    "200m"
@@ -39,22 +39,23 @@ patches:
                     cpu:    "1000m"
                     memory: "512Mi"
 
-  # Rentang HPA yang lebih lebar untuk menangani lonjakan trafik user
+  # Konfigurasi HPA agar dashboard bisa diskalakan saat beban admin tinggi
   - patch: |-
       apiVersion: autoscaling/v2
       kind: HorizontalPodAutoscaler
       metadata:
-        name: frontend-service-hpa
-        namespace: frontend-service
+        name: dashboard-service-hpa
+        namespace: dashboard-service
       spec:
         minReplicas: 3
         maxReplicas: 20
 
 # ── Production-specific config overrides ─────────────────────────────────────
 configMapGenerator:
-  - name: frontend-service-config
-    namespace: frontend-service
+  - name: dashboard-service-config
+    namespace: dashboard-service
     behavior: merge
     literals:
       - NODE_ENV=production
       - SERVICE_VERSION=1.0.0
+      - CACHE_ENABLED=true

@@ -1,17 +1,20 @@
+# k8s/base/dashboard-service/hpa.yaml
+# Autoscaling configuration for the Dashboard service.
+
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: frontend-service-hpa
-  namespace: frontend-service
+  name: dashboard-service-hpa
+  namespace: dashboard-service
   labels:
-    app.kubernetes.io/name: frontend-microservice
+    app.kubernetes.io/name: dashboard-microservice
     app.kubernetes.io/component: autoscaler
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: frontend-service
-  minReplicas: 2 # Menjaga ketersediaan tinggi (High Availability)
+    name: dashboard-service
+  minReplicas: 2 # Menjaga ketersediaan tinggi untuk panel kontrol
   maxReplicas: 10
   metrics:
     - type: Resource
@@ -19,23 +22,23 @@ spec:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: 70 # Tambah pod jika rata-rata CPU > 70%
+          averageUtilization: 70 # Scale up jika CPU rata-rata > 70%
     - type: Resource
       resource:
         name: memory
         target:
           type: Utilization
-          averageUtilization: 80 # Tambah pod jika rata-rata RAM > 80%
+          averageUtilization: 80 # Scale up jika RAM rata-rata > 80%
   behavior:
     scaleUp:
-      stabilizationWindowSeconds: 30 # Bereaksi cepat terhadap lonjakan trafik (30 detik)
+      stabilizationWindowSeconds: 30 # Bereaksi cepat saat banyak admin login
       policies:
         - type: Pods
-          value: 2 # Maksimal tambah 2 pod setiap kali scale-up
+          value: 2
           periodSeconds: 30
     scaleDown:
-      stabilizationWindowSeconds: 300 # Tunggu 5 menit sebelum scale-down (mencegah flapping)
+      stabilizationWindowSeconds: 300 # Menjaga kestabilan selama 5 menit sebelum scale down
       policies:
         - type: Pods
-          value: 1 # Hapus maksimal 1 pod setiap menit
+          value: 1
           periodSeconds: 60

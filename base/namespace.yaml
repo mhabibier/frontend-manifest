@@ -1,10 +1,10 @@
-# k8s/base/frontend-service/namespace.yaml
-# Dedicated namespace for frontend-service components.
+# k8s/base/dashboard-service/namespace.yaml
+# Dedicated namespace for dashboard-service components.
 
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: frontend-service
+  name: dashboard-service
   labels:
-    app.kubernetes.io/name: frontend-microservice
+    app.kubernetes.io/name: dashboard-microservice
     app.kubernetes.io/managed-by: kubectl
