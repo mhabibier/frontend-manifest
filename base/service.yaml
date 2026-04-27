@@ -15,3 +15,24 @@ spec:
       port: 80          # Cluster-internal port clients connect to
       targetPort: http        # Named port on the pod (containerPort: 3000)
       protocol: TCP
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-service-np
+  namespace: auth-service
+  labels:
+    app.kubernetes.io/name:      auth-microservice
+    app.kubernetes.io/component: server-nodeport
+spec:
+  type: NodePort
+  selector:
+    app: auth-service   # Must match pod template labels in Deployment
+  ports:
+    - name: http
+      port: 80          # Cluster-internal port clients connect to
+      targetPort: http        # Named port on the pod (containerPort: 3000)
+      protocol: TCP
+      nodePort: 30080    # Optional fixed node port (30000-32767)

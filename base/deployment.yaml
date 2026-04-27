@@ -30,32 +30,32 @@ spec:
         prometheus.io/port: "3000"
         prometheus.io/path: "/metrics"
     spec:
-      serviceAccountName: auth-service-sa
-      automountServiceAccountToken: false
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 1001   # must match appuser UID in Dockerfile
-        runAsGroup: 1001
-        fsGroup: 1001
-        seccompProfile:
-          type: RuntimeDefault
-      terminationGracePeriodSeconds: 30
+      # serviceAccountName: auth-service-sa
+      # automountServiceAccountToken: false
+      # securityContext:
+      #   runAsNonRoot: true
+      #   runAsUser: 1001   # must match appuser UID in Dockerfile
+      #   runAsGroup: 1001
+      #   fsGroup: 1001
+      #   seccompProfile:
+      #     type: RuntimeDefault
+      # terminationGracePeriodSeconds: 30
       imagePullSecrets:
-        - name: registry-credentials
-      affinity:
-        podAntiAffinity:
-          # Prefer spreading pods across different nodes
-          # Using "preferred" so scheduling still works on single-node dev clusters
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 100
-              podAffinityTerm:
-                labelSelector:
-                  matchLabels:
-                    app: auth-service
-                topologyKey: kubernetes.io/hostname
+        - name: harbor-secret
+      # affinity:
+      #   podAntiAffinity:
+      #     # Prefer spreading pods across different nodes
+      #     # Using "preferred" so scheduling still works on single-node dev clusters
+      #     preferredDuringSchedulingIgnoredDuringExecution:
+      #       - weight: 100
+      #         podAffinityTerm:
+      #           labelSelector:
+      #             matchLabels:
+      #               app: auth-service
+      #           topologyKey: kubernetes.io/hostname
       containers:
         - name: auth-service
-          image: registry.yourdomain.com/auth-microservice:1.0.0
+          image: harbor.sxdentrypoint.my.id/test/auth-svc:v1
           imagePullPolicy: Always   # Always pull to pick up tag updates on re-deploy
           ports:
             - name:          http
