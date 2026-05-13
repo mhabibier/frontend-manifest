@@ -1,16 +1,15 @@
-# k8s/base/dashboard-service/pdb.yaml
-# Memastikan ketersediaan minimum dashboard selama gangguan yang direncanakan.
+# PodDisruptionBudget for Frontend
 
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: dashboard-service-pdb
-  namespace: dashboard-service
+  name: frontend-pdb
+  namespace: frontend
   labels:
-    app.kubernetes.io/name: dashboard-microservice
+    app.kubernetes.io/name:      frontend
     app.kubernetes.io/component: pdb
 spec:
-  minAvailable: 1 # Minimal 1 pod harus tetap aktif saat maintenance node
+  minAvailable: 1
   selector:
     matchLabels:
-      app: dashboard-service
+      app: frontend

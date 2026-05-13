@@ -1,13 +1,11 @@
-# k8s/base/dashboard-service/sa.yaml
-# Dedicated ServiceAccount for dashboard-microservice.
+# ServiceAccount for Frontend
 
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: dashboard-service-sa
-  namespace: dashboard-service
+  name: frontend-sa
+  namespace: frontend
   labels:
-    app.kubernetes.io/name: dashboard-microservice
+    app.kubernetes.io/name:      frontend
     app.kubernetes.io/component: serviceaccount
-# Keamanan: Jangan pasang token API secara otomatis jika tidak dibutuhkan
 automountServiceAccountToken: false

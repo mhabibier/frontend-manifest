@@ -1,44 +1,43 @@
-# k8s/base/dashboard-service/hpa.yaml
-# Autoscaling configuration for the Dashboard service.
+# HorizontalPodAutoscaler for Frontend
 
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: dashboard-service-hpa
-  namespace: dashboard-service
+  name: frontend-hpa
+  namespace: frontend
   labels:
-    app.kubernetes.io/name: dashboard-microservice
+    app.kubernetes.io/name:      frontend
     app.kubernetes.io/component: autoscaler
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: dashboard-service
-  minReplicas: 2 # Menjaga ketersediaan tinggi untuk panel kontrol
-  maxReplicas: 10
+    name: frontend
+  minReplicas: 2    # Selalu pertahankan minimal 2 pod untuk ketersediaan tinggi
+  maxReplicas: 8
   metrics:
     - type: Resource
       resource:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: 70 # Scale up jika CPU rata-rata > 70%
+          averageUtilization: 70   # Scale up saat CPU > 70% rata-rata antar pod
     - type: Resource
       resource:
         name: memory
         target:
           type: Utilization
-          averageUtilization: 80 # Scale up jika RAM rata-rata > 80%
+          averageUtilization: 80   # Scale up saat memory > 80% rata-rata antar pod
   behavior:
     scaleUp:
-      stabilizationWindowSeconds: 30 # Bereaksi cepat saat banyak admin login
+      stabilizationWindowSeconds: 30     # Respons terhadap lonjakan traffic dalam 30s
       policies:
         - type: Pods
-          value: 2
+          value: 2               # Tambah maksimal 2 pod per event scale-up
           periodSeconds: 30
     scaleDown:
-      stabilizationWindowSeconds: 300 # Menjaga kestabilan selama 5 menit sebelum scale down
+      stabilizationWindowSeconds: 300    # Tunggu 5 menit sebelum scale-down (cegah flapping)
       policies:
         - type: Pods
-          value: 1
+          value: 1               # Kurangi maksimal 1 pod per event scale-down
           periodSeconds: 60

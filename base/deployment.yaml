@@ -1,106 +1,109 @@
-# k8s/base/dashboard-service/deployment.yaml
+# Deployment for Frontend (User-facing Bookstore)
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: dashboard-service
-  namespace: dashboard-service
+  name: frontend
+  namespace: frontend
   labels:
-    app.kubernetes.io/name: dashboard-microservice
+    app.kubernetes.io/name:      frontend
     app.kubernetes.io/component: server
-    app.kubernetes.io/version: "1.0.0"
+    app.kubernetes.io/version:   "1.0.0"
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: dashboard-service
+      app: frontend
   strategy:
     type: RollingUpdate
     rollingUpdate:
-      maxSurge: 1 # Menjalankan 1 pod ekstra saat update
-      maxUnavailable: 0 # Menjamin ketersediaan 100% (Zero Downtime)
+      maxSurge:       1   # Spin up 1 extra pod sebelum mematikan yang lama
+      maxUnavailable: 0   # Zero downtime — jangan matikan pod sebelum penggantinya siap
   template:
     metadata:
       labels:
-        app: dashboard-service
-        app.kubernetes.io/name: dashboard-microservice
+        app: frontend
+        app.kubernetes.io/name:      frontend
         app.kubernetes.io/component: server
-      annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "3000"
-        prometheus.io/path: "/metrics"
     spec:
-      serviceAccountName: dashboard-service-sa
+      serviceAccountName: frontend-sa
       automountServiceAccountToken: false
       securityContext:
         runAsNonRoot: true
-        runAsUser: 1001
-        runAsGroup: 1001
-        fsGroup: 1001
+        runAsUser:  101   # UID nginx dalam image nginx:alpine
+        runAsGroup: 101
+        fsGroup:    101
         seccompProfile:
           type: RuntimeDefault
       terminationGracePeriodSeconds: 30
       imagePullSecrets:
-        - name: registry-credentials
-      affinity:
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 100
-              podAffinityTerm:
-                labelSelector:
-                  matchLabels:
-                    app: dashboard-service
-                topologyKey: kubernetes.io/hostname
+        - name: harbor-secret   # docker-registry secret dibuat terpisah oleh admin/pipeline
       containers:
-        - name: dashboard-service
-          image: registry.yourdomain.com/dashboard-microservice:1.0.0
+        - name: frontend
+          image: harbor.sxdentrypoint.my.id/devsecops/frontend:v1
           imagePullPolicy: Always
           ports:
-            - name: http
-              containerPort: 3000
-              protocol: TCP
+            - name:          http
+              containerPort: 80
+              protocol:      TCP
           securityContext:
             allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
-            runAsNonRoot: true
-            runAsUser: 1001
+            readOnlyRootFilesystem:   false  # nginx perlu write ke /var/cache/nginx dan /var/run
+            runAsNonRoot:             true
+            runAsUser:                101    # nginx user dalam nginx:alpine
             capabilities:
               drop: ["ALL"]
-          envFrom:
-            - configMapRef:
-                name: dashboard-service-config
-          env:
-            - name: API_CLIENT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: dashboard-service-secret
-                  key: API_CLIENT_SECRET
+              add:  ["NET_BIND_SERVICE"]
           startupProbe:
             httpGet:
-              path: /health
+              path: /
               port: http
-            initialDelaySeconds: 10
-            periodSeconds: 10
-            failureThreshold: 6
+            initialDelaySeconds: 5
+            periodSeconds:       5
+            failureThreshold:    6     # 6 × 5s = 30s max startup time
+            timeoutSeconds:      3
           livenessProbe:
             httpGet:
-              path: /health
+              path: /
               port: http
-            periodSeconds: 20
+            initialDelaySeconds: 0
+            periodSeconds:       20
+            timeoutSeconds:      5
+            failureThreshold:    3
           readinessProbe:
             httpGet:
-              path: /health
+              path: /
               port: http
-            periodSeconds: 10
+            initialDelaySeconds: 0
+            periodSeconds:       10
+            timeoutSeconds:      3
+            failureThreshold:    3
+            successThreshold:    1
           resources:
             requests:
-              cpu: "100m"
-              memory: "128Mi"
+              cpu:    "50m"
+              memory: "64Mi"
             limits:
-              cpu: "500m"
-              memory: "512Mi"
+              cpu:    "200m"
+              memory: "256Mi"
           volumeMounts:
-            - name: tmp
+            - name:      nginx-config
+              mountPath: /etc/nginx/conf.d/default.conf
+              subPath:   nginx.conf   # Ambil key nginx.conf dari ConfigMap
+              readOnly:  true
+            - name:      nginx-cache
+              mountPath: /var/cache/nginx   # nginx butuh writable cache dir
+            - name:      nginx-pid
+              mountPath: /var/run           # nginx butuh writable /var/run untuk PID file
+            - name:      tmp
               mountPath: /tmp
       volumes:
+        - name: nginx-config
+          configMap:
+            name: frontend-config   # ConfigMap berisi key nginx.conf
+        - name: nginx-cache
+          emptyDir: {}
+        - name: nginx-pid
+          emptyDir: {}
         - name: tmp
           emptyDir: {}
