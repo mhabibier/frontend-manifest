@@ -20,6 +20,8 @@ data:
         listen 80;
         server_name localhost;
 
+        client_max_body_size 10m;
+
         location / {
             root   /usr/share/nginx/html;
             index  index.html index.htm;
@@ -27,40 +29,45 @@ data:
         }
 
         # Proxy API calls ke backend services agar menghindari CORS
-        location /api/auth/ {
-            proxy_pass         http://auth-service.auth-service.svc.cluster.local/;
+        location /api/auth {
+            proxy_pass         http://auth-service.auth-service.svc.cluster.local;
+            rewrite ^/api/auth(/.*)? /auth$1 break;
             proxy_set_header   Host              $host;
             proxy_set_header   X-Real-IP         $remote_addr;
             proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
             proxy_set_header   X-Forwarded-Proto $scheme;
         }
 
-        location /api/books/ {
-            proxy_pass         http://book-service.book-service.svc.cluster.local/;
+        location /api/books {
+            proxy_pass         http://book-service.book-service.svc.cluster.local;
+            rewrite ^/api/books(/.*)? /books$1 break;
             proxy_set_header   Host              $host;
             proxy_set_header   X-Real-IP         $remote_addr;
             proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
             proxy_set_header   X-Forwarded-Proto $scheme;
         }
 
-        location /api/orders/ {
-            proxy_pass         http://order-service.order-service.svc.cluster.local/;
+        location /api/orders {
+            proxy_pass         http://order-service.order-service.svc.cluster.local;
+            rewrite ^/api/orders(/.*)? /orders$1 break;
             proxy_set_header   Host              $host;
             proxy_set_header   X-Real-IP         $remote_addr;
             proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
             proxy_set_header   X-Forwarded-Proto $scheme;
         }
 
-        location /api/payments/ {
-            proxy_pass         http://payment-service.payment-service.svc.cluster.local/;
+        location /api/payments {
+            proxy_pass         http://payment-service.payment-service.svc.cluster.local;
+            rewrite ^/api/payments(/.*)? /payments$1 break;
             proxy_set_header   Host              $host;
             proxy_set_header   X-Real-IP         $remote_addr;
             proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
             proxy_set_header   X-Forwarded-Proto $scheme;
         }
 
-        location /api/blockchain/ {
-            proxy_pass         http://blockchain-service.blockchain-service.svc.cluster.local:3000/;
+        location /api/blockchain {
+            proxy_pass         http://blockchain-service.blockchain-service.svc.cluster.local:3000;
+            rewrite ^/api/blockchain(/.*)? /blockchain$1 break;
             proxy_set_header   Host              $host;
             proxy_set_header   X-Real-IP         $remote_addr;
             proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
