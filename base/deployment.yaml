@@ -40,7 +40,7 @@ spec:
         - name: harbor-secret   # docker-registry secret dibuat terpisah oleh admin/pipeline
       containers:
         - name: frontend
-          image: harbor.sxdentrypoint.my.id/devsecops/frontend-app:26ea05d9
+          image: harbor.sxdentrypoint.my.id/devsecops/frontend-app:fb675178
           imagePullPolicy: Always
           ports:
             - name:          http
