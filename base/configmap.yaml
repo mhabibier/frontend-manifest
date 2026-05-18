@@ -172,6 +172,23 @@ data:
             add_header X-Content-Type-Options "nosniff" always;
         }
 
+        # Proxy MinIO object storage — melayani gambar buku
+        # Browser load: https://app.sxdentrypoint.my.id/storage/books/<uuid>.jpg
+        # → diteruskan ke: http://minio.minio.svc.cluster.local:9000/books/<uuid>.jpg
+        # S3_PUBLIC_URL di book-service harus diset ke URL frontend ini
+        location /storage/ {
+            proxy_pass         http://minio.minio.svc.cluster.local:9000/;
+            proxy_set_header   Host              minio.minio.svc.cluster.local;
+            proxy_set_header   X-Real-IP         $remote_addr;
+            proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
+
+            # Cache gambar di browser selama 7 hari
+            add_header         Cache-Control     "public, max-age=604800, immutable";
+
+            # CORS agar gambar bisa dimuat dari semua origin frontend/dashboard
+            add_header         Access-Control-Allow-Origin  "*";
+        }
+
         error_page 500 502 503 504 /50x.html;
         location = /50x.html {
             root /usr/share/nginx/html;
