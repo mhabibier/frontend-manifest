@@ -36,6 +36,14 @@ data:
             root   /usr/share/nginx/html;
             index  index.html index.htm;
             try_files $uri $uri/ /index.html;
+            add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';" always;
+            add_header X-Frame-Options "SAMEORIGIN" always;
+            add_header Cross-Origin-Embedder-Policy "require-corp" always;
+            add_header Cross-Origin-Opener-Policy "same-origin" always;
+            add_header Cross-Origin-Resource-Policy "same-origin" always;
+            add_header Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=()" always;
+            add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
+            add_header X-Content-Type-Options "nosniff" always;
         }
 
         # Proxy API calls ke backend services agar menghindari CORS
@@ -46,7 +54,14 @@ data:
             proxy_set_header   X-Real-IP         $remote_addr;
             proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
             proxy_set_header   X-Forwarded-Proto $scheme;
+            proxy_hide_header  Content-Security-Policy;
             proxy_hide_header  X-Frame-Options;
+            proxy_hide_header  Cross-Origin-Embedder-Policy;
+            proxy_hide_header  Cross-Origin-Opener-Policy;
+            proxy_hide_header  Cross-Origin-Resource-Policy;
+            proxy_hide_header  Permissions-Policy;
+            proxy_hide_header  Strict-Transport-Security;
+            proxy_hide_header  X-Content-Type-Options;
             add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';" always;
             add_header X-Frame-Options "SAMEORIGIN" always;
             add_header Cross-Origin-Embedder-Policy "require-corp" always;
@@ -64,7 +79,14 @@ data:
             proxy_set_header   X-Real-IP         $remote_addr;
             proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
             proxy_set_header   X-Forwarded-Proto $scheme;
+            proxy_hide_header  Content-Security-Policy;
             proxy_hide_header  X-Frame-Options;
+            proxy_hide_header  Cross-Origin-Embedder-Policy;
+            proxy_hide_header  Cross-Origin-Opener-Policy;
+            proxy_hide_header  Cross-Origin-Resource-Policy;
+            proxy_hide_header  Permissions-Policy;
+            proxy_hide_header  Strict-Transport-Security;
+            proxy_hide_header  X-Content-Type-Options;
             add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';" always;
             add_header X-Frame-Options "SAMEORIGIN" always;
             add_header Cross-Origin-Embedder-Policy "require-corp" always;
@@ -82,7 +104,14 @@ data:
             proxy_set_header   X-Real-IP         $remote_addr;
             proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
             proxy_set_header   X-Forwarded-Proto $scheme;
+            proxy_hide_header  Content-Security-Policy;
             proxy_hide_header  X-Frame-Options;
+            proxy_hide_header  Cross-Origin-Embedder-Policy;
+            proxy_hide_header  Cross-Origin-Opener-Policy;
+            proxy_hide_header  Cross-Origin-Resource-Policy;
+            proxy_hide_header  Permissions-Policy;
+            proxy_hide_header  Strict-Transport-Security;
+            proxy_hide_header  X-Content-Type-Options;
             add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';" always;
             add_header X-Frame-Options "SAMEORIGIN" always;
             add_header Cross-Origin-Embedder-Policy "require-corp" always;
@@ -100,7 +129,14 @@ data:
             proxy_set_header   X-Real-IP         $remote_addr;
             proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
             proxy_set_header   X-Forwarded-Proto $scheme;
+            proxy_hide_header  Content-Security-Policy;
             proxy_hide_header  X-Frame-Options;
+            proxy_hide_header  Cross-Origin-Embedder-Policy;
+            proxy_hide_header  Cross-Origin-Opener-Policy;
+            proxy_hide_header  Cross-Origin-Resource-Policy;
+            proxy_hide_header  Permissions-Policy;
+            proxy_hide_header  Strict-Transport-Security;
+            proxy_hide_header  X-Content-Type-Options;
             add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';" always;
             add_header X-Frame-Options "SAMEORIGIN" always;
             add_header Cross-Origin-Embedder-Policy "require-corp" always;
@@ -118,7 +154,14 @@ data:
             proxy_set_header   X-Real-IP         $remote_addr;
             proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
             proxy_set_header   X-Forwarded-Proto $scheme;
+            proxy_hide_header  Content-Security-Policy;
             proxy_hide_header  X-Frame-Options;
+            proxy_hide_header  Cross-Origin-Embedder-Policy;
+            proxy_hide_header  Cross-Origin-Opener-Policy;
+            proxy_hide_header  Cross-Origin-Resource-Policy;
+            proxy_hide_header  Permissions-Policy;
+            proxy_hide_header  Strict-Transport-Security;
+            proxy_hide_header  X-Content-Type-Options;
             add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';" always;
             add_header X-Frame-Options "SAMEORIGIN" always;
             add_header Cross-Origin-Embedder-Policy "require-corp" always;
