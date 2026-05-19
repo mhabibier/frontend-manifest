@@ -23,7 +23,7 @@ data:
         client_max_body_size 10m;
 
         # Security Headers for OWASP ZAP Findings
-        add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';" always;
+        add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https://s3-api.sxdentrypoint.my.id; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';" always;
         add_header X-Frame-Options "SAMEORIGIN" always;
         add_header Cross-Origin-Embedder-Policy "require-corp" always;
         add_header Cross-Origin-Opener-Policy "same-origin" always;
@@ -36,7 +36,7 @@ data:
             root   /usr/share/nginx/html;
             index  index.html index.htm;
             try_files $uri $uri/ /index.html;
-            add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';" always;
+            add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https://s3-api.sxdentrypoint.my.id; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';" always;
             add_header X-Frame-Options "SAMEORIGIN" always;
             add_header Cross-Origin-Embedder-Policy "require-corp" always;
             add_header Cross-Origin-Opener-Policy "same-origin" always;
@@ -62,7 +62,7 @@ data:
             proxy_hide_header  Permissions-Policy;
             proxy_hide_header  Strict-Transport-Security;
             proxy_hide_header  X-Content-Type-Options;
-            add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';" always;
+            add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https://s3-api.sxdentrypoint.my.id; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';" always;
             add_header X-Frame-Options "SAMEORIGIN" always;
             add_header Cross-Origin-Embedder-Policy "require-corp" always;
             add_header Cross-Origin-Opener-Policy "same-origin" always;
@@ -87,7 +87,7 @@ data:
             proxy_hide_header  Permissions-Policy;
             proxy_hide_header  Strict-Transport-Security;
             proxy_hide_header  X-Content-Type-Options;
-            add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';" always;
+            add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https://s3-api.sxdentrypoint.my.id; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';" always;
             add_header X-Frame-Options "SAMEORIGIN" always;
             add_header Cross-Origin-Embedder-Policy "require-corp" always;
             add_header Cross-Origin-Opener-Policy "same-origin" always;
@@ -112,7 +112,7 @@ data:
             proxy_hide_header  Permissions-Policy;
             proxy_hide_header  Strict-Transport-Security;
             proxy_hide_header  X-Content-Type-Options;
-            add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';" always;
+            add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https://s3-api.sxdentrypoint.my.id; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';" always;
             add_header X-Frame-Options "SAMEORIGIN" always;
             add_header Cross-Origin-Embedder-Policy "require-corp" always;
             add_header Cross-Origin-Opener-Policy "same-origin" always;
@@ -137,7 +137,7 @@ data:
             proxy_hide_header  Permissions-Policy;
             proxy_hide_header  Strict-Transport-Security;
             proxy_hide_header  X-Content-Type-Options;
-            add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';" always;
+            add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https://s3-api.sxdentrypoint.my.id; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';" always;
             add_header X-Frame-Options "SAMEORIGIN" always;
             add_header Cross-Origin-Embedder-Policy "require-corp" always;
             add_header Cross-Origin-Opener-Policy "same-origin" always;
@@ -162,7 +162,7 @@ data:
             proxy_hide_header  Permissions-Policy;
             proxy_hide_header  Strict-Transport-Security;
             proxy_hide_header  X-Content-Type-Options;
-            add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';" always;
+            add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https://s3-api.sxdentrypoint.my.id; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';" always;
             add_header X-Frame-Options "SAMEORIGIN" always;
             add_header Cross-Origin-Embedder-Policy "require-corp" always;
             add_header Cross-Origin-Opener-Policy "same-origin" always;
@@ -192,7 +192,7 @@ data:
         error_page 500 502 503 504 /50x.html;
         location = /50x.html {
             root /usr/share/nginx/html;
-            add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';" always;
+            add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https://s3-api.sxdentrypoint.my.id; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';" always;
             add_header X-Frame-Options "SAMEORIGIN" always;
             add_header Cross-Origin-Embedder-Policy "require-corp" always;
             add_header Cross-Origin-Opener-Policy "same-origin" always;
