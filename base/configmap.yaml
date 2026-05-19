@@ -25,7 +25,7 @@ data:
         # Security Headers for OWASP ZAP Findings
         add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https://s3-api.sxdentrypoint.my.id; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';" always;
         add_header X-Frame-Options "SAMEORIGIN" always;
-        add_header Cross-Origin-Embedder-Policy "require-corp" always;
+        add_header Cross-Origin-Embedder-Policy "unsafe-none" always;
         add_header Cross-Origin-Opener-Policy "same-origin" always;
         add_header Cross-Origin-Resource-Policy "same-origin" always;
         add_header Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=()" always;
@@ -38,7 +38,7 @@ data:
             try_files $uri $uri/ /index.html;
             add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https://s3-api.sxdentrypoint.my.id; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';" always;
             add_header X-Frame-Options "SAMEORIGIN" always;
-            add_header Cross-Origin-Embedder-Policy "require-corp" always;
+            add_header Cross-Origin-Embedder-Policy "unsafe-none" always;
             add_header Cross-Origin-Opener-Policy "same-origin" always;
             add_header Cross-Origin-Resource-Policy "same-origin" always;
             add_header Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=()" always;
@@ -64,7 +64,7 @@ data:
             proxy_hide_header  X-Content-Type-Options;
             add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https://s3-api.sxdentrypoint.my.id; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';" always;
             add_header X-Frame-Options "SAMEORIGIN" always;
-            add_header Cross-Origin-Embedder-Policy "require-corp" always;
+            add_header Cross-Origin-Embedder-Policy "unsafe-none" always;
             add_header Cross-Origin-Opener-Policy "same-origin" always;
             add_header Cross-Origin-Resource-Policy "same-origin" always;
             add_header Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=()" always;
@@ -89,7 +89,7 @@ data:
             proxy_hide_header  X-Content-Type-Options;
             add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https://s3-api.sxdentrypoint.my.id; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';" always;
             add_header X-Frame-Options "SAMEORIGIN" always;
-            add_header Cross-Origin-Embedder-Policy "require-corp" always;
+            add_header Cross-Origin-Embedder-Policy "unsafe-none" always;
             add_header Cross-Origin-Opener-Policy "same-origin" always;
             add_header Cross-Origin-Resource-Policy "same-origin" always;
             add_header Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=()" always;
@@ -114,7 +114,7 @@ data:
             proxy_hide_header  X-Content-Type-Options;
             add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https://s3-api.sxdentrypoint.my.id; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';" always;
             add_header X-Frame-Options "SAMEORIGIN" always;
-            add_header Cross-Origin-Embedder-Policy "require-corp" always;
+            add_header Cross-Origin-Embedder-Policy "unsafe-none" always;
             add_header Cross-Origin-Opener-Policy "same-origin" always;
             add_header Cross-Origin-Resource-Policy "same-origin" always;
             add_header Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=()" always;
@@ -139,7 +139,7 @@ data:
             proxy_hide_header  X-Content-Type-Options;
             add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https://s3-api.sxdentrypoint.my.id; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';" always;
             add_header X-Frame-Options "SAMEORIGIN" always;
-            add_header Cross-Origin-Embedder-Policy "require-corp" always;
+            add_header Cross-Origin-Embedder-Policy "unsafe-none" always;
             add_header Cross-Origin-Opener-Policy "same-origin" always;
             add_header Cross-Origin-Resource-Policy "same-origin" always;
             add_header Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=()" always;
@@ -164,7 +164,7 @@ data:
             proxy_hide_header  X-Content-Type-Options;
             add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https://s3-api.sxdentrypoint.my.id; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';" always;
             add_header X-Frame-Options "SAMEORIGIN" always;
-            add_header Cross-Origin-Embedder-Policy "require-corp" always;
+            add_header Cross-Origin-Embedder-Policy "unsafe-none" always;
             add_header Cross-Origin-Opener-Policy "same-origin" always;
             add_header Cross-Origin-Resource-Policy "same-origin" always;
             add_header Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=()" always;
@@ -194,7 +194,7 @@ data:
             root /usr/share/nginx/html;
             add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https://s3-api.sxdentrypoint.my.id; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';" always;
             add_header X-Frame-Options "SAMEORIGIN" always;
-            add_header Cross-Origin-Embedder-Policy "require-corp" always;
+            add_header Cross-Origin-Embedder-Policy "unsafe-none" always;
             add_header Cross-Origin-Opener-Policy "same-origin" always;
             add_header Cross-Origin-Resource-Policy "same-origin" always;
             add_header Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=()" always;
